@@ -42,3 +42,5 @@ next-env.d.ts
 
 # dữ liệu chế độ thử nghiệm
 /.data/
+!.env.example
+/.claude/
