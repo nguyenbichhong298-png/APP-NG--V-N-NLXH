@@ -3,14 +3,12 @@ import { isDemoMode, isSupabaseConfigured } from "@/lib/server/db";
 import { isAIConfigured } from "@/lib/server/ai";
 
 export async function GET() {
+  const mode = isSupabaseConfigured() ? "supabase" : isDemoMode() ? "demo" : "unconfigured";
+  if (mode === "unconfigured") return Response.json({ user: null, mode, ai: isAIConfigured() });
   try {
-    const user = await getCurrentUser();
-    return Response.json({
-      user,
-      mode: isSupabaseConfigured() ? "supabase" : isDemoMode() ? "demo" : "unconfigured",
-      ai: isAIConfigured(),
-    });
+    return Response.json({ user: await getCurrentUser(), mode, ai: isAIConfigured() });
   } catch (err) {
-    return Response.json({ user: null, error: err instanceof Error ? err.message : String(err) }, { status: 500 });
+    console.error(err);
+    return Response.json({ user: null, mode, ai: isAIConfigured(), error: err instanceof Error ? err.message : String(err) });
   }
 }

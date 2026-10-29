@@ -176,7 +176,7 @@ create policy own_versions on public.essay_versions for select using (
   exists (select 1 from public.essays e where e.id = essay_id and e.author_id = auth.uid())
 );
 create policy reviewer_versions on public.essay_versions for select using (
-  exists (select 1 from public.assignments a where a.essay_version_id = id and a.reviewer_id = auth.uid())
+  exists (select 1 from public.assignments a where a.essay_version_id = essay_versions.id and a.reviewer_id = auth.uid())
 );
 create policy teacher_all_assignments on public.assignments for all using (public.is_teacher());
 create policy own_assignments on public.assignments for select using (writer_id = auth.uid() or reviewer_id = auth.uid());
